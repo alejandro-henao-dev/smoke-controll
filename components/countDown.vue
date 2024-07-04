@@ -1,48 +1,55 @@
 <script setup lang="ts">
 // import date from 'date-and-time';
   const props=defineProps<{
-    endDate:Date
+    endDate?:Date
   }>()
 
   const done=ref(true)
   const hours = ref(0)
   const minutes = ref(0)
   const seconds = ref(0)
-  const interval=ref<any>(null)
-
-  function startCountdown(targetDate: Date) {
-    
-        // Parse the target date
-        const endDate = new Date(targetDate.toString()).getTime();
-
-        // Update the countdown every second
-        interval.value = setInterval(function() {
-            done.value=false
-            // Get the current date and time
-            const now = new Date().getTime();
-
-            // Find the distance between now and the target date
-            const distance =  ( endDate -now);
-
-            // Calculate hours, minutes, and seconds
-            hours.value = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            minutes.value = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            seconds.value = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // If the countdown is over, display "EXPIRED"
-            if (distance < 0) {
-                clearInterval(interval.value);
-                done.value=true
-            }
-        }, 1000);
-  }
+  const interval = ref<any>(null)
+  const endDate = computed(() => {
+    return props.endDate?.getTime()
+  })
 
   onMounted(() => {
-    startCountdown(props.endDate)
+    startCountdown()
   })
   onBeforeUnmount(() => {
     clearInterval(interval.value);
   })
+
+  watch([endDate], () => {
+    clearInterval(interval.value);
+    startCountdown()
+  })
+
+  function startCountdown() {
+    if (!endDate?.value) {
+        return
+       }
+
+        // Update the countdown every second
+    interval.value = setInterval(function () {
+      if (!endDate?.value) return
+      
+      done.value=false
+
+      const now = new Date().getTime();
+      const distance =  endDate.value - now;
+
+      hours.value = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      minutes.value = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      seconds.value = Math.floor((distance % (1000 * 60)) / 1000);
+
+      if (distance < 0) {
+          clearInterval(interval.value);
+          done.value=true
+      }
+    }, 1000);
+  }
+
 
 </script>
 
