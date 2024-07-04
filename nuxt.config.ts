@@ -20,25 +20,25 @@ export default defineNuxtConfig({
       background_color: '#ffffff',
       icons: [
         {
-          src: "/icons/icon_64x64.svg",
+          src: "/smoke-controll/icons/icon_64x64.svg",
           sizes: "64x64",
           type: "image/svg+xml",
           purpose:"any"
         },
         {
-          src: "/icons/icon_144x144.svg",
+          src: "/smoke-controll//icons/icon_144x144.svg",
           sizes: "144x144",
           type: "image/svg+xml",
           purpose:"any"
         },
         {
-          src: "/icons/icon_192x192.svg",
+          src: "/smoke-controll//icons/icon_192x192.svg",
           sizes: "192x192",
           type: "image/svg+xml",
           purpose:"any"
         },
         {
-          src: "/icons/icon_512x512.svg",
+          src: "/smoke-controll//icons/icon_512x512.svg",
           sizes: "512x512",
           type: "image/svg+xml",
           purpose:"any"
@@ -46,14 +46,14 @@ export default defineNuxtConfig({
       ],
       screenshots: [    
         {
-          "src": "/screenshots/screenshot_385x430.png",
+          "src": "/smoke-controll//screenshots/screenshot_385x430.png",
           "sizes": "385x530",
           "type": "image/png",
           "form_factor": "narrow",
           "label": "Application"
         },
         {
-          "src": "/screenshots/screenshot_573x352.png",
+          "src": "/smoke-controll//screenshots/screenshot_573x352.png",
           "sizes": "573x352",
           "type": "image/png",
           "form_factor": "wide",
