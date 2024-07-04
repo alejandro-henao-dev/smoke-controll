@@ -9,9 +9,6 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/jsstore'
   ],
-  app: {
-    baseURL:development ? "/" :"https://alejandro-henao-dev.github.io/smoke-controll/"
-  },
   pwa: {
     registerType:"autoUpdate",
     manifest: {
