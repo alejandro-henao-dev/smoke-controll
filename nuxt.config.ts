@@ -2,6 +2,7 @@
 
 let development = process.env.NODE_ENV !== 'production'
 
+const basURL=development ? "/" : "/smoke-controll/"
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr:false,
@@ -9,6 +10,14 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/jsstore'
   ],
+  app: {
+    baseURL:basURL
+  },
+  runtimeConfig: {
+    public: {
+      baseURL:basURL
+    }
+  },
   pwa: {
     registerType:"autoUpdate",
     manifest: {

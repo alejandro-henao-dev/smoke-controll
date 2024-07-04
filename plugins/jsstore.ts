@@ -3,8 +3,10 @@ import JsStore,{Connection} from 'jsstore';
 import { Seed, StoreSchema } from '~/components/store/schema';
 
 export default defineNuxtPlugin((nuxtApp) => {
-  
-  const connection = new Connection(new Worker("/worker.js"));
+  const config = useRuntimeConfig();
+  const baseURL = config.public.baseURL;
+  const workerPath=`${baseURL}worker.js`
+  const connection = new Connection(new Worker(workerPath));
 
 
   const getDb = ():JsStore.IDataBase => {
