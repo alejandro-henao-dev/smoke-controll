@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     '~/plugins/jsstore'
   ],
   app: {
-    baseURL:development ? "/" :"/.output/public"
+    baseURL:development ? "/" :"https://alejandro-henao-dev.github.io/smoke-controll/"
   },
   pwa: {
     registerType:"autoUpdate",
