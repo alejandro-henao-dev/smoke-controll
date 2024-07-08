@@ -11,13 +11,7 @@ import { ConfigRepo } from '~/components/store/config';
   const duedate = ref<Date>()
   const dayCigars= ref(0)
 
-  const canSmoke = computed(() => {
-    const delta = getDeltaTime()
-    if (delta) {
-      return delta?.toMilliseconds() <= 0
-    }
-    return true
-  })
+  const canSmoke =ref(true)
 
   const cigarsRepo = new CigarsRepo($db)
   const configRepo = new ConfigRepo($db)
@@ -33,17 +27,24 @@ import { ConfigRepo } from '~/components/store/config';
     updateDayCigars()
     
   })
+  
 
+  watch([duedate], () => {
+    if(!duedate.value) return 
+    const delta=date.subtract(duedate.value,new Date())
+    if (delta) {
+      canSmoke.value = delta?.toMilliseconds() <= 0
+      return
+    }
+    canSmoke.value=true
+  },{immediate:true})
+  
   watch([lastCigarTime,timeToAdd], () => {  
     if(!timeToAdd.value || !lastCigarTime.value) return
     duedate.value = date.addMinutes(lastCigarTime.value, timeToAdd.value)
   })
 
-  const getDeltaTime = () => {
-    if(!duedate.value) return 
-    return date.subtract(duedate.value,new Date())
-  }
-
+ 
   const updateTimeToAdd = async () => {
 
     timeToAdd.value =await configRepo.getTime()
@@ -74,6 +75,9 @@ import { ConfigRepo } from '~/components/store/config';
     updateDayCigars()
   }
 
+  const onTimerDone = () => {
+    canSmoke.value = true
+  }
   const onNoSmokeClick = async () => {
     
     await cigarsRepo.insert(new Date())
@@ -86,7 +90,7 @@ import { ConfigRepo } from '~/components/store/config';
     let time = 0
     if(dates.length == 0) return timeToAdd.value
     dates.reduce((accumulator, current, index, array) => {
-      const delta = parseInt(
+      const delta = parseFloat(
         date.subtract(accumulator.date, current.date)
           .toMinutes()
           .toFixed(2)
@@ -116,7 +120,7 @@ import { ConfigRepo } from '~/components/store/config';
     </NuxtLink>
 
     
-    <CountDown class="mb-7" :endDate="duedate" />
+    <CountDown class="mb-7" :endDate="duedate" @onDone="onTimerDone"/>
 
     <ButtonSmoke @click="onSmokeClick" v-if="canSmoke"/>
     <ButtonNoSmoke @click="onNoSmokeClick" v-if="!canSmoke"/>

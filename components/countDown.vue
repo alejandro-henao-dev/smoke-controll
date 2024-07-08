@@ -3,7 +3,7 @@
   const props=defineProps<{
     endDate?:Date
   }>()
-
+  const emmiter=defineEmits(["onDone"])
   const done=ref(true)
   const hours = ref(0)
   const minutes = ref(0)
@@ -45,7 +45,8 @@
 
       if (distance < 0) {
           clearInterval(interval.value);
-          done.value=true
+          done.value = true
+          emmiter('onDone')
       }
     }, 1000);
   }
