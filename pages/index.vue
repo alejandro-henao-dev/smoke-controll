@@ -94,14 +94,20 @@ import { ConfigRepo } from '~/components/store/config';
           .toMinutes()
           .toFixed(2)
       )
+
+      let diff
+      if (delta > timeToAdd.value) {
+        // do not apply time in favor
+        diff=timeToAdd.value 
+      } else {
+        diff= delta
+      }
       
-      time+=timeToAdd.value -delta
+      time += timeToAdd.value - diff
       return current
     })
-
-    if (time < 0) { 
-      time= 0
-    }
+    
+    
     return timeToAdd.value + time
   }
 
