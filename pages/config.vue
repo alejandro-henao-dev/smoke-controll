@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ConfigRepo } from '~/components/store/config';
-
+  const {version}=useRuntimeConfig().public
   const time = ref(0)
   const maxCigars=ref(0)
   const {$db} = useNuxtApp()
-
+  
   const configRepo=new ConfigRepo($db)   
   configRepo.getTime().then((data: any) => {
    time.value= data
@@ -41,7 +41,8 @@ import { ConfigRepo } from '~/components/store/config';
 
 
   <main class="mt-8 flex flex-col gap-8">
-    <section class="border border-primary-700 w-max p-8 container m-auto flex flex-col gap-4" >
+    <section class="border border-primary-700 w-max p-8 container m-auto flex
+    flex-col gap-4 w-full" >
     
 
         <label class="grid grid-cols-[1fr_4rem] gap-4">
@@ -64,6 +65,16 @@ import { ConfigRepo } from '~/components/store/config';
 
     
 
+    <section id="app-info" class="w-max p-8 container m-auto flex flex-col gap-1
+    text-center">
+      <p class="text-xs text-primary-600 m-0">Version: {{ version }}</p>
+      <p class="text-xs text-primary-600 m-0 underline">
+        <a href="https://www.linkedin.com/in/alejandro-henao-fullstackdev/"
+        target="_blank">
+          By: Alejandro Henao
+        </a>
+      </p>
+    </section>
   </main>
   
 </template>

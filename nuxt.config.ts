@@ -1,8 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 let development = process.env.NODE_ENV !== 'production'
+var pjson = require('./package.json');
+const basURL = development ? "/" : "/smoke-controll/"
 
-const basURL=development ? "/" : "/smoke-controll/"
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr:false,
@@ -15,6 +16,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
+      version:pjson.version,
       baseURL:basURL
     }
   },
