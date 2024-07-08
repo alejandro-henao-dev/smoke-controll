@@ -51,14 +51,16 @@
     }, 1000);
   }
 
-
+  const formatNumbers = (num:number | string) => {
+    return num.toString().padStart(2,"0")
+  }
 </script>
 
 <template>
 
   <div class="font-extrabold text-2xl font-mono bg-slate-950 text-center p-2">
     <template v-if="done">--:--:--</template>
-    <template v-if="!done">{{hours}}:{{minutes}}:{{seconds}}</template>
+    <template v-if="!done">{{formatNumbers(hours)}}:{{formatNumbers(minutes)}}:{{formatNumbers(seconds)}}</template>
   </div>
 
 </template>

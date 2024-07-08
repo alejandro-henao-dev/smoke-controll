@@ -87,20 +87,17 @@ import { ConfigRepo } from '~/components/store/config';
 
   const calculateDayDelta = (dates: any[]) => {
     let time = 0
-    if(dates.length == 0) return timeToAdd.value
+    if(dates.length <= 1) return timeToAdd.value
     dates.reduce((accumulator, current, index, array) => {
       const delta = parseFloat(
         date.subtract(accumulator.date, current.date)
           .toMinutes()
           .toFixed(2)
       )
-
-      if (delta === 0 || delta == timeToAdd.value) {
-        return current 
-      }
-      time+=timeToAdd.value - delta  
+      
+      time+=timeToAdd.value -delta
       return current
-    }, { date: new Date() })
+    })
 
     if (time < 0) { 
       time= 0
