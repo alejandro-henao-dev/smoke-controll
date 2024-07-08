@@ -3,7 +3,7 @@
   const props=defineProps<{
     endDate?:Date
   }>()
-  const emmiter=defineEmits(["onDone"])
+  const emmiter=defineEmits(["onDone",'onStart'])
   const done=ref(true)
   const hours = ref(0)
   const minutes = ref(0)
@@ -27,9 +27,9 @@
 
   function startCountdown() {
     if (!endDate?.value) {
-        return
-       }
-
+      return
+    }
+    emmiter('onStart')
         // Update the countdown every second
     interval.value = setInterval(function () {
       if (!endDate?.value) return

@@ -41,7 +41,7 @@ import { ConfigRepo } from '~/components/store/config';
 
 
   <main class="mt-8 flex flex-col gap-8">
-    <section class="border border-primary-700 w-max p-8 container m-auto flex
+    <section class="border border-primary-700  p-8 container m-auto flex
     flex-col gap-4 w-full" >
     
 

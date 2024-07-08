@@ -9,9 +9,13 @@ import { ConfigRepo } from '~/components/store/config';
   const maxCigars = ref(0)
   const lastCigarTime = ref<Date>()
   const duedate = ref<Date>()
-  const dayCigars= ref(0)
+  const dayCigars = ref(0)
+  const timerDone=ref(false)
 
-  const canSmoke =ref(true)
+  const canSmoke = computed(() => {
+    if (!duedate.value) return true
+    return timerDone.value
+  })
 
   const cigarsRepo = new CigarsRepo($db)
   const configRepo = new ConfigRepo($db)
@@ -29,15 +33,7 @@ import { ConfigRepo } from '~/components/store/config';
   })
   
 
-  watch([duedate], () => {
-    if(!duedate.value) return 
-    const delta=date.subtract(duedate.value,new Date())
-    if (delta) {
-      canSmoke.value = delta?.toMilliseconds() <= 0
-      return
-    }
-    canSmoke.value=true
-  },{immediate:true})
+  
   
   watch([lastCigarTime,timeToAdd], () => {  
     if(!timeToAdd.value || !lastCigarTime.value) return
@@ -76,7 +72,10 @@ import { ConfigRepo } from '~/components/store/config';
   }
 
   const onTimerDone = () => {
-    canSmoke.value = true
+    timerDone.value = true
+  }
+  const onTimerStart = () => {
+    timerDone.value = false
   }
   const onNoSmokeClick = async () => {
     
@@ -120,7 +119,7 @@ import { ConfigRepo } from '~/components/store/config';
     </NuxtLink>
 
     
-    <CountDown class="mb-7" :endDate="duedate" @onDone="onTimerDone"/>
+    <CountDown class="mb-7" :endDate="duedate" @onDone="onTimerDone" @onStart="onTimerStart"/>
 
     <ButtonSmoke @click="onSmokeClick" v-if="canSmoke"/>
     <ButtonNoSmoke @click="onNoSmokeClick" v-if="!canSmoke"/>
