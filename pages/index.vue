@@ -125,7 +125,7 @@ import { ConfigRepo } from '~/components/store/config';
     <ButtonSmoke @click="onSmokeClick" v-if="canSmoke"/>
     <ButtonNoSmoke @click="onNoSmokeClick" v-if="!canSmoke"/>
 
-    <div class="mt-6 font-bold text-xl font-mono bg-slate-950 w-24 text-center p-2">
+    <div class="mt-6 font-bold text-xl font-mono bg-slate-950 w-max text-center p-2 ">
       {{ dayCigars }} / {{ maxCigars }}
     </div>
   </div>
