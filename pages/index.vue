@@ -1,116 +1,14 @@
 <script setup lang="ts">
-import { CigarsRepo } from '~/components/store/cigars';
-import date from 'date-and-time';
-import { ConfigRepo } from '~/components/store/config';
-  const { $db } = useNuxtApp()
-
-
-  const timeToAdd = ref<number>(0)
-  const maxCigars = ref(0)
-  const lastCigarTime = ref<Date>()
-  const duedate = ref<Date>()
-  const dayCigars = ref(0)
-  const timerDone=ref(false)
-
-  const canSmoke = computed(() => {
-    if (!duedate.value) return true
-    return timerDone.value
-  })
-
-  const cigarsRepo = new CigarsRepo($db)
-  const configRepo = new ConfigRepo($db)
-
-
-
-  onMounted(() => {
-    updateTimeToAdd()
-    configRepo.getMaxCigars().then((data: any) => {
-      maxCigars.value= data
-    })
-    updateLastCigarTime()
-    updateDayCigars()
-    
-  })
+  const { timeToAdd, maxCigars } = useConfig()
+  const cigarsRepo = useCigarsStore()
+  const {lastCigar,update:updateLastCigar} = useLastCigar()
+  const {dayCigars,update:updateDayCigars} = useDayCigars(new Date())
   
-
-  
-  
-  watch([lastCigarTime,timeToAdd], () => {  
-    if(!timeToAdd.value || !lastCigarTime.value) return
-    duedate.value = date.addMinutes(lastCigarTime.value, timeToAdd.value)
-  })
-
- 
-  const updateTimeToAdd = async () => {
-
-    timeToAdd.value =await configRepo.getTime()
-    timeToAdd.value = await  cigarsRepo.findByDate(new Date()).then(calculateDayDelta)
-  }
-
-  const updateDayCigars = () => {
-    cigarsRepo.countCigarsByDate(new Date()).then(count => {
-      dayCigars.value=count  
-    })
-    
-  }
-
-  const updateLastCigarTime = () => {
-    cigarsRepo.getLatest().then((time) => {
-      if (!time) {
-      
-        return 
-      }
-      lastCigarTime.value = time?.date as Date
-    })
-  }
-
-  const  onSmokeClick = async() => {
+  const onSmoke = async () => {
     await cigarsRepo.insert(new Date())
-    updateLastCigarTime()
-    updateTimeToAdd()
+    updateLastCigar()
     updateDayCigars()
   }
-
-  const onTimerDone = () => {
-    timerDone.value = true
-  }
-  const onTimerStart = () => {
-    timerDone.value = false
-  }
-  const onNoSmokeClick = async () => {
-    
-    await cigarsRepo.insert(new Date())
-    updateLastCigarTime()
-    updateTimeToAdd()
-    updateDayCigars()
-  }
-
-  const calculateDayDelta = (dates: any[]) => {
-    let time = 0
-    if(dates.length <= 1) return timeToAdd.value
-    dates.reduce((accumulator, current, index, array) => {
-      const delta = parseFloat(
-        date.subtract(accumulator.date, current.date)
-          .toMinutes()
-          .toFixed(2)
-      )
-
-      let diff
-      if (delta > timeToAdd.value) {
-        // do not apply time in favor
-        diff=timeToAdd.value 
-      } else {
-        diff= delta
-      }
-      
-      time += timeToAdd.value - diff
-      return current
-    })
-    
-    
-    return timeToAdd.value + time
-  }
-
 </script>
 <template>
 
@@ -120,15 +18,17 @@ import { ConfigRepo } from '~/components/store/config';
     <NuxtLink class="absolute right-0 top-0 p-4 text-xl" href="/config">
       <IconConfig/>
     </NuxtLink>
-
     
-    <CountDown class="mb-7" :endDate="duedate" @onDone="onTimerDone" @onStart="onTimerStart"/>
-
-    <ButtonSmoke @click="onSmokeClick" v-if="canSmoke"/>
-    <ButtonNoSmoke @click="onNoSmokeClick" v-if="!canSmoke"/>
+    <SmokeTimer
+      :maxCigars="maxCigars"  
+      :lastCigarTime="lastCigar?.date"
+      :timeToAdd="timeToAdd" 
+      :dayCigars="dayCigars" 
+      @onSmoke="onSmoke" 
+    />
 
     <div class="mt-6 font-bold text-xl font-mono bg-slate-950 w-max text-center p-2 ">
-      {{ dayCigars }} / {{ maxCigars }}
+      {{ dayCigars?.length }} / {{ maxCigars }}
     </div>
   </div>
   

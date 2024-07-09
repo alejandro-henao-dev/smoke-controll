@@ -1,29 +1,8 @@
 <script setup lang="ts">
-import { ConfigRepo } from '~/components/store/config';
+
   const {version}=useRuntimeConfig().public
-  const time = ref(0)
-  const maxCigars=ref(0)
+  const { timeToAdd, maxCigars } = useConfig()
   const {$db} = useNuxtApp()
-  
-  const configRepo=new ConfigRepo($db)   
-  configRepo.getTime().then((data: any) => {
-   time.value= data
-  })
-  configRepo.getMaxCigars().then((data: any) => {
-   maxCigars.value= data
-  })
-
-
-  watch(time, () => {
-    if(isNaN(parseInt(time.value as any))) return 
-    configRepo.updateTime(time.value)
-  })
-
-  watch(maxCigars, () => {
-    if(isNaN(parseInt(maxCigars.value as any))) return 
-    configRepo.updateMaxCigars(maxCigars.value)
-  })
-
   const onReset = () => {
     $db.clear("cigars")
   }
@@ -49,7 +28,7 @@ import { ConfigRepo } from '~/components/store/config';
           <span class="">Minutes in between</span>
           <input name="perday" type="number"
           class=" w-16 bg-primary-950 text-center
-          invalid:bg-danger-900" v-model.number="time"/>
+          invalid:bg-danger-900" v-model.number="timeToAdd"/>
         </label>
 
         <label class="grid grid-cols-[1fr_4rem] gap-4">
