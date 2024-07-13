@@ -2,7 +2,7 @@
 
 let development = process.env.NODE_ENV !== 'production' || process.env.TEST_BUILD == "true"
 var pjson = require('./package.json');
-const baseURL = development ? "/" : "/asmoke-controll/"
+const baseURL = development ? "/" : "/smoke-controll/"
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
