@@ -9,7 +9,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test": "playwright test"
+    "test": "playwright test",
+    "prepare": "husky"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.0",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.45.1",
-    "@types/node": "^20.14.10"
+    "@types/node": "^20.14.10",
+    "husky": "^9.0.11"
   }
 }
