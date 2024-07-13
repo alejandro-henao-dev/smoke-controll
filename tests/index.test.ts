@@ -97,26 +97,27 @@ test.describe("smoking", () => {
     await expect(page.getByText("1 / 10")).toBeVisible()
     await expect(page.getByText('01:30:00')).toBeVisible();
     
-    await timer.runTimer(45, { waitTimerUpdate: false })
-    await expect(page.getByText('00:45:00')).toBeVisible();
     
     await timer.clickOnNoSmoke()
     await expect(page.getByText("2 / 10")).toBeVisible()
-    await expect(page.getByText('02:15:00')).toBeVisible();
+    await expect(page.getByText('03:00:00')).toBeVisible();
     
 
-    await timer.runTimer(120, { waitTimerUpdate: false })
-    await expect(page.getByText('00:15:00')).toBeVisible();
+    await timer.runTimer(180, { waitTimerUpdate: false })
+    await expect(page.getByText('--:--:--')).toBeVisible();
 
-    await timer.clickOnNoSmoke()
-    await expect(page.getByText("3 / 10")).toBeVisible()
-    await expect(page.getByText('01:45:00')).toBeVisible();
-
-    await timer.runTimer(120, { waitForState: "off" })
-    
     await timer.clickOnSmoke()
-    await expect(page.getByText("4 / 10")).toBeVisible()
+    await expect(page.getByText("3 / 10")).toBeVisible()
     await expect(page.getByText('01:30:00')).toBeVisible();
 
+    await timer.runTimer(30, { waitTimerUpdate: false })
+    await expect(page.getByText('01:00:00')).toBeVisible();
+    
+    await timer.clickOnNoSmoke()
+    await expect(page.getByText("4 / 10")).toBeVisible()
+    await expect(page.getByText('02:30:00')).toBeVisible();
+
+    await timer.runTimer(240, { waitTimerUpdate: false })
+    await expect(page.getByText('--:--:--')).toBeVisible();
   })
 })

@@ -49,11 +49,12 @@ import date from 'date-and-time';
           .toFixed(2)
       )
       
-      let diff=0
+      let diff = 0
+
       if (delta >= baseTimeToAdd) {
         diff-=delta - baseTimeToAdd
       } else {
-        diff+= delta
+        diff+= baseTimeToAdd-delta
       }
 
       time += diff
