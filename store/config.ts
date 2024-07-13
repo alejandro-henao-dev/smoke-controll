@@ -5,7 +5,7 @@ export class ConfigRepo{
   constructor(private db: Connection) { }
   
   async getTime() {
-    return (await this.db.select<any>({ from: "config", where: { type: "time" } }))[0].value as number
+    return (await this.db.select<any>({ from: "config", where: { type: "time" } }))[0]?.value as number
   }
 
   async updateTime(time:number) {
@@ -19,7 +19,7 @@ export class ConfigRepo{
   }
 
   async getMaxCigars() {
-    return (await this.db.select<any>({ from: "config", where: { type: "max_cigars" } }))[0].value as number
+    return (await this.db.select<any>({ from: "config", where: { type: "max_cigars" } }))[0]?.value as number
   }
 
   async updateMaxCigars(max:number) {

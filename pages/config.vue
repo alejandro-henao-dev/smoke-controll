@@ -26,13 +26,13 @@
 
         <label class="grid grid-cols-[1fr_4rem] gap-4">
           <span class="">Minutes in between</span>
-          <input name="perday" type="number"
+          <input name="inBetween" type="number" 
           class=" w-16 bg-primary-950 text-center
           invalid:bg-danger-900" v-model.number="timeToAdd"/>
         </label>
 
         <label class="grid grid-cols-[1fr_4rem] gap-4">
-          <span class="">Max per day:</span>
+          <span class="">Max per day</span>
           <input name="perday" type="number"
           class=" w-16 bg-primary-950 text-center
           invalid:bg-danger-900" v-model.number="maxCigars"/>

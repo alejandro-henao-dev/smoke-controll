@@ -13,8 +13,12 @@
     return props.endDate?.getTime()
   })
 
-  onMounted(() => {
-    startCountdown()
+  // onMounted(() => {
+
+  startCountdown()
+  // })
+  onUpdated(() => {
+    calculateTimer()
   })
   onBeforeUnmount(() => {
     clearInterval(interval.value);
@@ -25,30 +29,33 @@
     startCountdown()
   })
 
+  function calculateTimer (){
+    if (!endDate?.value) {
+      return
+    }
+    
+    const now = new Date().getTime();
+    const distance =  endDate.value - now;
+
+    hours.value = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    minutes.value = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    seconds.value = Math.floor((distance % (1000 * 60)) / 1000);
+
+    if (distance <= 0) {
+        clearInterval(interval.value);
+        done.value = true
+        emmiter('onDone')
+    }
+  }
+
   function startCountdown() {
     if (!endDate?.value) {
       return
     }
     emmiter('onStart')
-        // Update the countdown every second
-    interval.value = setInterval(function () {
-      if (!endDate?.value) return
-      
-      done.value=false
-
-      const now = new Date().getTime();
-      const distance =  endDate.value - now;
-
-      hours.value = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      minutes.value = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      seconds.value = Math.floor((distance % (1000 * 60)) / 1000);
-
-      if (distance < 0) {
-          clearInterval(interval.value);
-          done.value = true
-          emmiter('onDone')
-      }
-    }, 1000);
+    done.value = false
+    calculateTimer()
+    interval.value = setInterval(calculateTimer, 1000);
   }
 
   const formatNumbers = (num:number | string) => {
@@ -58,9 +65,10 @@
 
 <template>
 
-  <div class="font-extrabold text-2xl font-mono bg-slate-950 text-center p-2">
-    <template v-if="done">--:--:--</template>
-    <template v-if="!done">{{formatNumbers(hours)}}:{{formatNumbers(minutes)}}:{{formatNumbers(seconds)}}</template>
+  <div class="font-extrabold text-2xl font-mono bg-slate-950 text-center p-2"
+  >
+    <span v-if="done"aria-label="timer off" >--:--:--</span>
+    <span v-if="!done" aria-label="timer on">{{formatNumbers(hours)}}:{{formatNumbers(minutes)}}:{{formatNumbers(seconds)}}</span>
   </div>
 
 </template>

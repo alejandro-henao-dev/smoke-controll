@@ -1,4 +1,4 @@
-import { CigarsRepo, type Cigar } from "~/components/store/cigars"
+import { CigarsRepo, type Cigar } from "~/store/cigars"
 
 export const useCigarsStore = () => {
   const { $db } = useNuxtApp()
@@ -31,7 +31,9 @@ export const useLastCigar = () => {
     repo.getLatest().then((time) =>lastCigar.value = time)
   }
 
-  update()
+  // onMounted(() => {
+    update()
+  // })
 
   return {
     lastCigar,

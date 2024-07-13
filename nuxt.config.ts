@@ -1,8 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-let development = process.env.NODE_ENV !== 'production'
+let development = process.env.NODE_ENV !== 'production' || process.env.TEST_BUILD == "true"
 var pjson = require('./package.json');
-const basURL = development ? "/" : "/smoke-controll/"
+const baseURL = development ? "/" : "/asmoke-controll/"
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -12,12 +12,12 @@ export default defineNuxtConfig({
     '~/plugins/jsstore'
   ],
   app: {
-    baseURL:basURL
+    baseURL:baseURL
   },
   runtimeConfig: {
     public: {
       version:pjson.version,
-      baseURL:basURL
+      baseURL:baseURL
     }
   },
   pwa: {
@@ -31,25 +31,25 @@ export default defineNuxtConfig({
       background_color: '#ffffff',
       icons: [
         {
-          src: "/smoke-controll/icons/icon_64x64.svg",
+          src: `${baseURL}icons/icon_64x64.svg`,
           sizes: "64x64",
           type: "image/svg+xml",
           purpose:"any"
         },
         {
-          src: "/smoke-controll//icons/icon_144x144.svg",
+          src: `${baseURL}icons/icon_144x144.svg`,
           sizes: "144x144",
           type: "image/svg+xml",
           purpose:"any"
         },
         {
-          src: "/smoke-controll//icons/icon_192x192.svg",
+          src: `${baseURL}icons/icon_192x192.svg`,
           sizes: "192x192",
           type: "image/svg+xml",
           purpose:"any"
         },
         {
-          src: "/smoke-controll//icons/icon_512x512.svg",
+          src: `${baseURL}icons/icon_512x512.svg`,
           sizes: "512x512",
           type: "image/svg+xml",
           purpose:"any"
@@ -57,14 +57,14 @@ export default defineNuxtConfig({
       ],
       screenshots: [    
         {
-          "src": "/smoke-controll//screenshots/screenshot_385x430.png",
+          "src": `${baseURL}screenshots/screenshot_385x430.png`,
           "sizes": "385x530",
           "type": "image/png",
           "form_factor": "narrow",
           "label": "Application"
         },
         {
-          "src": "/smoke-controll//screenshots/screenshot_573x352.png",
+          "src": `${baseURL}screenshots/screenshot_573x352.png`,
           "sizes": "573x352",
           "type": "image/png",
           "form_factor": "wide",
@@ -74,7 +74,7 @@ export default defineNuxtConfig({
     },
     
     workbox: {
-      navigateFallback: "/",
+      navigateFallback: baseURL,
       clientsClaim: true,
       skipWaiting: true
     },

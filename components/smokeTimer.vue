@@ -1,29 +1,30 @@
 <script setup lang="ts">
-import { type Cigar } from '~/components/store/cigars';
+import { type Cigar } from '~/store/cigars';
 import date from 'date-and-time';
   const props = defineProps<
     {
       timeToAdd?: number,
       maxCigars?: number,
       dayCigars?: Cigar[],
-      lastCigarTime?:Date
     }>()
   
-  const emmit=defineEmits(['onSmoke'])
+  const emmit = defineEmits(['onSmoke'])
 
-  const duedate = ref<Date>()
+  const lastCigarTime = computed(() => {
+    return props.dayCigars?.at(0)?.date
+  })
+
+  const duedate = computed(() => {
+    if (!props.timeToAdd || !lastCigarTime.value || !props.dayCigars) return
+    return date.addMinutes(lastCigarTime.value, calculateDayDelta(props.dayCigars, props.timeToAdd))
+  })
+
   const timerDone=ref(false)
 
   const canSmoke = computed(() => {
     if (!duedate.value) return true 
     return timerDone.value
   })
-
-  watchEffect(() => {
-    if(!props.timeToAdd || !props.lastCigarTime || !props.dayCigars) return
-    duedate.value = date.addMinutes(props.lastCigarTime, calculateDayDelta(props.dayCigars,props.timeToAdd))
-  })
-  
 
   const onTimerDone = () => {
     timerDone.value = true
@@ -38,7 +39,7 @@ import date from 'date-and-time';
     emmit("onSmoke")
   }
 
-  const calculateDayDelta = (dates: Cigar[],baseTimeToAdd:number) => {
+  function calculateDayDelta (dates: Cigar[],baseTimeToAdd:number) {
     let time = 0
     if(dates.length <= 1) return baseTimeToAdd
     dates.reduce((accumulator, current, index, array) => {
@@ -47,20 +48,19 @@ import date from 'date-and-time';
           .toMinutes()
           .toFixed(2)
       )
-
-      let diff
-      if (delta > baseTimeToAdd) {
-        // do not apply time in favor
-        diff=baseTimeToAdd 
-      } else {
-        diff= delta
-      }
       
-      time += baseTimeToAdd - diff
+      let diff=0
+      if (delta >= baseTimeToAdd) {
+        diff-=delta - baseTimeToAdd
+      } else {
+        diff+= delta
+      }
+
+      time += diff
       return current
     })
-    
-    
+    // do not apply time in favor
+    if(time < 0) return baseTimeToAdd
     return baseTimeToAdd + time
   }
 

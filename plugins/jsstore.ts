@@ -1,8 +1,8 @@
 import { defineNuxtPlugin } from '#app';
 import JsStore,{Connection} from 'jsstore';
-import { Seed, StoreSchema } from '~/components/store/schema';
+import { Seed, StoreSchema } from '~/store/schema';
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(async (nuxtApp) => {
   const config = useRuntimeConfig();
   const baseURL = config.public.baseURL;
   const workerPath=`${baseURL}worker.js`
@@ -14,10 +14,11 @@ export default defineNuxtPlugin((nuxtApp) => {
   };
 
 
+  const exists = await dbExists(getDb().name)
 
-  connection.initDb(getDb()).then(async() => {
+  await connection.initDb(getDb()).then(async() => {
     console.log('Database created successfully');
-    Seed(connection)
+    if(!exists) await Seed(connection)
   }).catch(err => {
     console.error(err);
   });
@@ -29,3 +30,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   }
 });
+
+const dbExists = async (name:string) => {
+  const dbs = await window.indexedDB.databases()
+  return dbs.map(db => db.name).includes(name);
+
+}

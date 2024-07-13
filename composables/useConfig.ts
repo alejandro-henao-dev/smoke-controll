@@ -1,4 +1,4 @@
-import { ConfigRepo } from "~/components/store/config"
+import { ConfigRepo } from "~/store/config"
 
 export const useConfig = () => {
   const { $db } = useNuxtApp()
@@ -9,7 +9,7 @@ export const useConfig = () => {
   const configRepo = new ConfigRepo($db)
 
   const loadTimeToAdd = async () => timeToAdd.value = await configRepo.getTime()
-  const loadMaxCigars = async () => configRepo.getMaxCigars().then((data: any) => maxCigars.value = data)
+  const loadMaxCigars = async () => maxCigars.value = await configRepo.getMaxCigars()
   
   watch(timeToAdd, () => {
     if(isNaN(parseInt(timeToAdd.value as any))) return 
@@ -21,9 +21,12 @@ export const useConfig = () => {
     configRepo.updateMaxCigars(maxCigars.value)
   })
 
+  // onMounted(() => {
+    loadTimeToAdd()
+    loadMaxCigars()  
+  // })
 
-  loadTimeToAdd()
-  loadMaxCigars()
+  
 
   return {
     timeToAdd: timeToAdd,
